@@ -1,0 +1,7 @@
+input {
+  position: absolute;
+  bottom: 1vw;
+  left: 50%;
+  width: 67vw;
+  transform: translateX(-50%);
+}
