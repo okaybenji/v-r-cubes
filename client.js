@@ -5,12 +5,20 @@
 // const ws = new WebSocket('wss://banjo.benjikay.com/v-r-cubes');
 const ws = new WebSocket('ws://localhost:8001');
 
+let id;
+
 const send = (msg) => {
   ws.send(JSON.stringify(msg));
 };
 
 ws.onmessage = (data, flags) => {
   const msg = JSON.parse(data.data);
+
+  if (msg.myId) {
+    id = msg.myId;
+    return;
+  }
+
   const scene = document.querySelector('a-scene');
   let box = scene.querySelector('#' + msg.id);
 
@@ -47,9 +55,9 @@ input.addEventListener('input', () => {
   if (utils.isUrl(input.value)) {
     utils.validateImage(input.value)
       .then(() => {
-        send({id: 'box1', src: input.value}); // TODO: look up id from ip on server
+        send({id, src: input.value});
       });
   } else {
-    send({id: 'box1', color: utils.randomColor()});
+    send({id, color: utils.randomColor()});
   }
 });

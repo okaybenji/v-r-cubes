@@ -19,6 +19,9 @@ wss.on('connection', (ws) => {
   const ip = ws._socket.remoteAddress;
   console.log('user', id, 'connected with IP', ip);
 
+  // Let client know its ID.
+  ws.send(JSON.stringify({myId: id}));
+
   const broadcast = (msg) => {
     wss.clients.forEach(client => {
       if (client === ws || client.readyState !== client.OPEN) {
