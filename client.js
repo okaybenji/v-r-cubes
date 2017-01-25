@@ -1,87 +1,55 @@
-const randomIntBetween = (min, max) => {
-  return Math.floor(Math.random() * (max - min)) + min;
+/* jshint esnext:true */
+/* jshint browser:true */
+/* global utils */
+
+// const ws = new WebSocket('wss://banjo.benjikay.com/v-r-cubes');
+const ws = new WebSocket('ws://localhost:8001');
+
+const send = (msg) => {
+  ws.send(JSON.stringify(msg));
 };
 
-const randomColor = () => {
-  const minBrightness = 25;
-  const minSaturation = 50;
-
-  let color = 'hsl(';
-  color += randomIntBetween(0, 360) + ',';
-  color += randomIntBetween(minSaturation, 100) + '%,';
-  color += randomIntBetween(minBrightness, 100) + '%)';
-
-  return color;
-};
-
-let box = {
-  id: 0,
-  position: '0 0.5 0',
-  rotation: '0 45 0',
-  color: randomColor()
-};
-
-const addBox = (box) => {
+ws.onmessage = (data, flags) => {
+  const msg = JSON.parse(data.data);
   const scene = document.querySelector('a-scene');
-  const el = document.createElement('a-box');
+  let box = scene.querySelector('#' + msg.id);
 
-  el.setAttribute('width', '1');
-  el.setAttribute('height', '1');
-  el.setAttribute('depth', '1');
-  el.setAttribute('id', box.id);
-  el.setAttribute('position', box.position);
-  el.setAttribute('rotation', box.rotation);
-  el.setAttribute('color', box.color);
+  // Create a box if we didn't find this one.
+  if (!box) {
+    box = document.createElement('a-box');
+    scene.appendChild(box);
+    box.setAttribute('id', msg.id);
+    box.setAttribute('width', '1');
+    box.setAttribute('height', '1');
+    box.setAttribute('depth', '1');
+  }
 
-  scene.appendChild(el);
+  const setEmIfYouGotEm = (attribute) => {
+    if (msg[attribute]) {
+      box.setAttribute(attribute, msg[attribute]);
+    }
+  };
+
+  const attributes = ['position', 'rotation', 'color', 'src'];
+  attributes.forEach(setEmIfYouGotEm);
+
+  if (msg.color) {
+    box.removeAttribute('src');
+  } else if (msg.src) {
+    box.setAttribute('color', 'white');
+  }
 };
-
-addBox(box);
-
-const isUrl = url =>  url.match(/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi);
-
-let cachedUrls = {};
 
 const input = document.querySelector('input');
 
 input.addEventListener('input', () => {
-  const validateImage = (url) => {
-    if (cachedUrls[url]) {
-      return new Promise(resolve => resolve());
-    }
-
-    const timeout = 5000;
-    const img = new Image();
-    let timer;
-
-    return new Promise((resolve, reject) => {
-      img.onerror = img.onabort = () => {
-        clearTimeout(timer);
-        reject(new Error('URL is not a valid image.'));
-      };
-      img.onload = () => {
-        clearTimeout(timer);
-        cachedUrls[url] = true;
-        resolve();
-      };
-      timer = setTimeout(() => {
-        img.src = '';
-        reject(new Error('Timed out while validating image.'));
-      }, timeout);
-      img.src = url;
-    });
-  };
-
   // TODO: why does setting the same image twice fail?
-  if (isUrl(input.value)) {
-    const box = document.querySelector('a-box'); // TODO: remove me
-    validateImage(input.value)
+  if (utils.isUrl(input.value)) {
+    utils.validateImage(input.value)
       .then(() => {
-        box.setAttribute('src', input.value);
-        box.setAttribute('color', 'white');
+        send({id: 'box1', src: input.value}); // TODO: look up id from ip on server
       });
   } else {
-    box.removeAttribute('src');
-    box.setAttribute('color', randomColor());
+    send({id: 'box1', color: utils.randomColor()});
   }
 });
