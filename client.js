@@ -2,8 +2,8 @@
 /* jshint browser:true */
 /* global utils */
 
-// const ws = new WebSocket('wss://banjo.benjikay.com/v-r-cubes');
-const ws = new WebSocket('ws://localhost:8001');
+// const ws = new WebSocket('ws://localhost:8001');
+const ws = new WebSocket('wss://banjo.benjikay.com/v-r-cubes');
 const camera = document.querySelector('a-camera');
 const priorState = {
   pos: camera.getAttribute('position'),
