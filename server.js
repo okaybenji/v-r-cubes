@@ -19,8 +19,18 @@ wss.on('connection', (ws) => {
   const ip = ws._socket.remoteAddress;
   console.log('user', id, 'connected with IP', ip);
 
-  // Let client know its ID.
-  ws.send(JSON.stringify({myId: id}));
+  const x = utils.randomIntBetween(-5, 5);
+  const z = utils.randomIntBetween(-5, 5);
+
+  ws.box = {
+    id,
+    position: x + ' 0.5 ' + z,
+    rotation: '0 45 0', // TODO: point to origin
+    color: utils.randomColor()
+  };
+
+  // Let client know its ID, position and rotation.
+  ws.send(JSON.stringify({myId: id, position: x + ' -1 ' + z, rotation: ws.box.rotation}));
 
   const broadcast = (msg) => {
     wss.clients.forEach(client => {
@@ -30,13 +40,6 @@ wss.on('connection', (ws) => {
 
       client.send(JSON.stringify(msg));
     });
-  };
-
-  ws.box = {
-    id,
-    position: utils.randomIntBetween(-5, 5) + ' 0.5 ' + utils.randomIntBetween(-5, 5),
-    rotation: '0 45 0', // TODO: point to origin
-    color: utils.randomColor()
   };
 
   broadcast(ws.box);

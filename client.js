@@ -16,6 +16,11 @@ ws.onmessage = (data, flags) => {
 
   if (msg.myId) {
     id = msg.myId;
+
+    const camera = document.querySelector('a-entity');
+    camera.setAttribute('position', msg.position);
+    camera.setAttribute('rotation', msg.rotation);
+
     return;
   }
 
