@@ -1,0 +1,23 @@
+{
+  "name": "v-r-cubes",
+  "version": "0.0.1",
+  "description": "V R all cubes. All of us. V really R.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/okaybenji/v-r-cubes.git"
+  },
+  "author": "Benji Kay",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/okaybenji/v-r-cubes/issues"
+  },
+  "homepage": "https://okaybenji.github.io/okaybenji/v-r-cubes#readme",
+  "dependencies": {
+    "ws": "^1.1.1"
+  }
+}
