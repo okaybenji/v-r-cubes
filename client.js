@@ -4,11 +4,17 @@
 
 // const ws = new WebSocket('wss://banjo.benjikay.com/v-r-cubes');
 const ws = new WebSocket('ws://localhost:8001');
-
+const camera = document.querySelector('a-camera');
+const priorState = {
+  pos: camera.getAttribute('position'),
+  rot: camera.getAttribute('rotation'),
+};
 let id;
 
 const send = (msg) => {
-  ws.send(JSON.stringify(msg));
+  if (ws.readyState === ws.OPEN) {
+    ws.send(JSON.stringify(msg));
+  }
 };
 
 ws.onmessage = (data, flags) => {
@@ -17,7 +23,6 @@ ws.onmessage = (data, flags) => {
   if (msg.myId) {
     id = msg.myId;
 
-    const camera = document.querySelector('a-entity');
     camera.setAttribute('position', msg.position);
     camera.setAttribute('rotation', msg.rotation);
 
@@ -42,19 +47,25 @@ ws.onmessage = (data, flags) => {
     box.setAttribute('depth', '1');
   }
 
-  const setEmIfYouGotEm = (attribute) => {
-    if (msg[attribute]) {
-      box.setAttribute(attribute, msg[attribute]);
-    }
-  };
-
-  const attributes = ['position', 'rotation', 'color', 'src'];
-  attributes.forEach(setEmIfYouGotEm);
-
   if (msg.color) {
     box.removeAttribute('src');
-  } else if (msg.src) {
-    box.setAttribute('color', 'white');
+    box.setAttribute('color', msg.color);
+  }
+
+  if (msg.src) {
+    utils.validateImage(msg.src)
+      .then(() => {
+        box.setAttribute('color', 'white');
+        box.setAttribute('src', msg.src);
+      });
+  }
+
+  if (msg.position) {
+    box.setAttribute('position', {x: msg.position.x, y: 0.5, z: msg.position.z});
+  }
+
+  if (msg.rotation) {
+    box.setAttribute('rotation', {x: 0, y: msg.rotation.y, z: 0});
   }
 };
 
@@ -71,3 +82,33 @@ input.addEventListener('input', () => {
     send({id, color: utils.randomColor()});
   }
 });
+
+const step = () => {
+  let shouldUpdate = false;
+  let update = {id, position: {}, rotation: {}};
+
+  const pos = camera.getAttribute('position');
+  if (pos.x !== priorState.pos.x) {
+    shouldUpdate = true;
+    update.position.x = priorState.pos.x = pos.x;
+  }
+
+  if (pos.z !== priorState.pos.z) {
+    shouldUpdate = true;
+    update.position.z = priorState.pos.z = pos.z;
+  }
+
+  const rot = camera.getAttribute('rotation');
+  if (rot.y !== priorState.rot.y ) {
+    shouldUpdate = true;
+    update.rotation.y = priorState.rot.y = rot.y;
+  }
+
+  if (shouldUpdate) {
+    send(update);
+  }
+
+  requestAnimationFrame(step);
+};
+
+step();

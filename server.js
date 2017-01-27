@@ -24,13 +24,13 @@ wss.on('connection', (ws) => {
 
   ws.box = {
     id,
-    position: x + ' 0.5 ' + z,
-    rotation: '0 45 0', // TODO: point to origin
+    position: {x, y: 0.5, z}, // NOTE: Y is currently different from cameras vs. boxes.
+    rotation: {x: 0, y: 45, z: 0}, // TODO: Rotate new cubes to face origin (x: 0, z: 0).
     color: utils.randomColor()
   };
 
   // Let client know its ID, position and rotation.
-  ws.send(JSON.stringify({myId: id, position: x + ' -1 ' + z, rotation: ws.box.rotation}));
+  ws.send(JSON.stringify({myId: id, position: {x: ws.box.position.x, y: 2, z: ws.box.position.z}, rotation: ws.box.rotation}));
 
   const broadcast = (msg) => {
     wss.clients.forEach(client => {
@@ -63,14 +63,6 @@ wss.on('connection', (ws) => {
       }
 
       if (!wss.clients.find(c => c.id === id)) {
-        return false;
-      }
-
-      if (position && typeof position !== 'string') {
-        return false;
-      }
-
-      if (rotation && typeof rotation !== 'string') {
         return false;
       }
 
