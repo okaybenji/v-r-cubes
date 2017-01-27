@@ -22,6 +22,11 @@ ws.onmessage = (data, flags) => {
   const scene = document.querySelector('a-scene');
   let box = scene.querySelector('#' + msg.id);
 
+  if (msg.destroy) {
+    scene.removeChild(box);
+    return;
+  }
+
   // Create a box if we didn't find this one.
   if (!box) {
     box = document.createElement('a-box');

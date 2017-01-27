@@ -32,14 +32,24 @@ wss.on('connection', (ws) => {
     });
   };
 
-  const box = {
+  ws.box = {
     id,
-    position: '0 0.5 0', // TODO: randomize w/i some limit
+    position: utils.randomIntBetween(-5, 5) + ' 0.5 ' + utils.randomIntBetween(-5, 5),
     rotation: '0 45 0', // TODO: point to origin
     color: utils.randomColor()
   };
 
-  broadcast(box);
+  broadcast(ws.box);
+
+  // Inform client of already existing clients.
+  // TODO: Send data in an array rather than sending multiple msgs.
+  wss.clients.forEach(client => {
+      if (client === ws || client.readyState !== client.OPEN) {
+        return;
+      }
+
+    ws.send(JSON.stringify(client.box));
+  });
 
   ws.on('message', (msg) => {
     const {id, position, rotation, src} = JSON.parse(msg);
@@ -71,5 +81,10 @@ wss.on('connection', (ws) => {
     } else {
       console.warn('user', id, 'with ip', 'sent bad data:', msg);
     }
+  });
+
+  ws.on('close', function() {
+    broadcast({ destroy: true, id: id });
+    console.log(id, 'disconnected');
   });
 });
