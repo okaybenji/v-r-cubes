@@ -72,6 +72,10 @@ wss.on('connection', (ws) => {
     };
 
     if (dataIsValid) {
+      const pos = Object.assign({}, ws.box.position, position);
+      const rot = Object.assign({}, ws.box.rotation, rotation);
+      ws.box = Object.assign({}, ws.box, {position: pos, rotation: rot, src});
+
       broadcast({id, position, rotation, src});
     } else {
       console.warn('user', id, 'with ip', 'sent bad data:', msg);
