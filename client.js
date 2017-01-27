@@ -56,7 +56,12 @@ ws.onmessage = (data, flags) => {
     utils.validateImage(msg.src)
       .then(() => {
         box.setAttribute('color', 'white');
-        box.setAttribute('src', msg.src);
+        // TODO: Make this more robust. (Find a better gif test.)
+        if (msg.src.substr(msg.src.length - 3) === 'gif') {
+          box.setAttribute('material', `shader:gif;src:url(${msg.src});`);
+        } else {
+          box.setAttribute('src', msg.src);
+        }
       });
   }
 
