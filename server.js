@@ -30,7 +30,7 @@ wss.on('connection', (ws) => {
   };
 
   // Let client know its ID, position and rotation.
-  ws.send(JSON.stringify({myId: id, position: {x: ws.box.position.x, y: 2, z: ws.box.position.z}, rotation: ws.box.rotation}));
+  ws.send(JSON.stringify({myId: id, position: ws.box.position, rotation: ws.box.rotation}));
 
   const broadcast = (msg) => {
     wss.clients.forEach(client => {
