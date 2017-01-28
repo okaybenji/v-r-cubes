@@ -11,8 +11,13 @@
   </head>
   <body>
     <a-scene>
-      <a-plane rotation="-90 0 0" width="20" height="20" color="#7BC8A4"></a-plane>
-      <a-sky color="#ECECEC"></a-sky>
+      <img id="grid" src="https://i.imgur.com/25P1geh.png" crossorigin="anonymous">
+      <img id="sky" src="http://i.imgur.com/WqlqEkq.jpg" crossorigin="anonymous">
+      <a-entity position="0 0 0"
+        geometry="primitive: plane; width: 10000; height: 10000;" rotation="-90 0 0"
+        material="src: #grid; repeat: 10000 10000; transparent: true;metalness:0.6; roughness: 0.4; sphericalEnvMap: #sky;">
+      </a-entity>
+      <a-sky src="#sky" rotation="0 -90 0"></a-sky>
       <a-entity>
         <a-camera></a-camera>
       </a-entity>
