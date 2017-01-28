@@ -72,9 +72,18 @@ wss.on('connection', (ws) => {
     };
 
     if (dataIsValid) {
-      const pos = Object.assign({}, ws.box.position, position);
-      const rot = Object.assign({}, ws.box.rotation, rotation);
-      ws.box = Object.assign({}, ws.box, {position: pos, rotation: rot, src});
+      if (position && position.x) {
+        ws.box.x = position.x;
+      }
+      if (position && position.z) {
+        ws.box.z = position.z;
+      }
+      if (rotation && rotation.y) {
+        ws.box.y = rotation.y;
+      }
+      if (src) {
+        ws.box.src = src;
+      }
 
       broadcast({id, position, rotation, src});
     } else {
