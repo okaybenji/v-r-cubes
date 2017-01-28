@@ -57,19 +57,24 @@ wss.on('connection', (ws) => {
   ws.on('message', (msg) => {
     const {id, position, rotation, src} = JSON.parse(msg);
 
-    const dataIsValid = () => {
+    const dataIsValid = (() => {
       if (!id) {
+        console.warn('user with ip', ip, 'sent data w/ missing id. data:', msg);
         return false;
       }
 
-      if (!wss.clients.find(c => c.id === id)) {
+      if (!wss.clients.find(c => c.box.id === id)) {
+        console.warn('user', id, 'with ip', ip, 'not in client list. data:', msg);
         return false;
       }
 
       if (src && !utils.isUrl(src)) {
+        console.warn('user', id, 'with ip', ip, 'sent bad image URL. data:', msg);
         return false;
       }
-    };
+
+      return true;
+    })();
 
     if (dataIsValid) {
       if (position && position.x) {
@@ -86,8 +91,6 @@ wss.on('connection', (ws) => {
       }
 
       broadcast({id, position, rotation, src});
-    } else {
-      console.warn('user', id, 'with ip', 'sent bad data:', msg);
     }
   });
 
