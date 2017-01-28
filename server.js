@@ -24,7 +24,7 @@ wss.on('connection', (ws) => {
 
   ws.box = {
     id,
-    position: {x, y: 0.5, z}, // NOTE: Y is currently different from cameras vs. boxes.
+    position: {x, y: 0.5, z},
     rotation: {x: 0, y: 45, z: 0}, // TODO: Rotate new cubes to face origin (x: 0, z: 0).
     color: utils.randomColor()
   };
