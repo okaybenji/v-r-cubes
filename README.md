@@ -3,7 +3,7 @@ A dumb, weird multiplayer VR toy. V R all cubes, V can move around, and V can se
 
 ![Screenshot](https://media.giphy.com/media/26xBStb0HrOW275lK/giphy.gif)
 
-NOTE: Use image URLs which begin in HTTPS.
+NOTE: Use image URLs which begin with `https`.
 
 # Why?
 ¯\\\_(ツ)_/¯
