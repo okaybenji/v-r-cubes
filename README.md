@@ -10,6 +10,8 @@ NOTE: Use image URLs which begin with `https`.
 # Why?
 ¯\\\_(ツ)_/¯
 
+This is maybe the first multiplayer WebVR thing? And/or maybe the first game-like thing to let you texture yourself with a URL? If you know of others, please [get in touch](http://twitter.com/okaybenji)!
+
 # Thx
 
 * [Mozilla VR](https://mozvr.com) for [A-Frame](http://aframe.io)
