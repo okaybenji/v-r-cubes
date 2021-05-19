@@ -16,7 +16,7 @@ This is maybe the first multiplayer WebVR thing? And/or maybe the first game-lik
 
 * [Mozilla VR](https://mozvr.com) for [A-Frame](http://aframe.io)
 * [Ricardo Cabello](https://github.com/mrdoob) for [three.js](https://threejs.org)
-* [Kevin Ngo](https://github.com/ngokevin) for the [Metaverse scene](https://aframe.io/examples/showcase/hello-metaverse)
+* [Ada Rose Cannon](https://twitter.com/AdaRoseCannon) for the [Metaverse scene](https://aframe.io/examples/showcase/hello-metaverse)
 * [Mayo Tobita](https://github.com/mayognaise) & [gtk2k](https://github.com/gtk2k) for the [A-Frame GIF Shader](https://github.com/mayognaise/aframe-gif-shader)
 
 Thank you!
